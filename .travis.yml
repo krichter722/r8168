@@ -1,2 +1,2 @@
-languages: c
+language: c
 script: sudo make clean modules && sudo make install
