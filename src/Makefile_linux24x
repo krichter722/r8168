@@ -1,0 +1,45 @@
+# Makefile for a basic kernel module
+
+CC		:= gcc
+LD		:= ld
+ARCH		:= $(shell uname -m | sed 's/i.86/i386/')
+KSRC		:= /lib/modules/$(shell uname -r)/build
+CONFIG_FILE	:= $(KSRC)/include/linux/autoconf.h
+
+
+ifeq ($(ARCH),x86_64)
+   MODCFLAGS	+= -mcmodel=kernel -mno-red-zone
+endif
+
+#standard flags for module builds
+MODCFLAGS	+= -DLINUX -D__KERNEL__ -DMODULE -O2 -pipe -Wall
+MODCFLAGS	+= -I$(KSRC)/include -I.
+MODCFLAGS	+= -DMODVERSIONS -DEXPORT_SYMTAB -include $(KSRC)/include/linux/modversions.h
+ifeq ($(RTL_IOCTL),y)
+   SOURCE	:= r8168_n.c rtl_ioctl.c
+else
+   SOURCE	:= r8168_n.c
+endif
+OBJS		:= $(SOURCE:.c=.o)
+
+
+SMP		:= $(shell $(CC) $(MODCFLAGS) -E -dM $(CONFIG_FILE) | \
+   grep CONFIG_SMP | awk '{print $$3}')
+
+ifneq ($(SMP),1)
+   SMP		:= 0
+endif
+
+ifeq ($(SMP),1)
+   MODCFLAGS	+= -D__SMP__
+endif
+
+modules: $(OBJS)
+	$(LD) -r $^ -o r8168.o
+	strip --strip-debug r8168.o
+
+%.o: %.c
+	$(CC) $(MODCFLAGS) -c $< -o $@ 
+
+clean:
+	rm *.o -f

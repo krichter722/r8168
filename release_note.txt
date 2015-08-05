@@ -1,0 +1,57 @@
+release date: 2008/04/02
+driver version: 8.006.00
+1. Modify phy parameters for RTL8111C. 
+2. RTL8168B/8111B, RTL8168C/8111C and RTL8168CP/8111CP support Jumbo Frame
+
+release date: 2008/01/09
+driver version: 8.005.00
+1. Fix hibernate and cannot wakeup issue.
+   The root cause: In rtl8168_init_board, tp->dev is never assigned. Therefor, it is a NULL pointer and the system crashes when this pointer is accessed.
+   Solution: Assign a vaild memory address to tp->dev.
+2. Modify GPHY parameters of RTL8111C
+3. Modify GPHY configurations of RTL8111C
+4. Create a spin lock to protect GPHY configuration.
+5. Implement a kernel timer to rescue the NIC after the PCI reset is triggered.
+
+release date: 2007/11/21
+driver version: 8.004.00
+1. Support linux kernel 2.4.x(2.4.20 and latter).
+2. G-PHY reset remedy: 
+	(a) The driver waits until the bit 15 of BMCR taggle and configues the capability of ANAR, GBCR and BMCR. (driver waits 2.5 sec)
+	(b) Turn to page 0 before configure ANAR, GBCR and BMCR to prevent the
+phy from being configured wrongly.
+3. Do an amendment of multicast registers, since the sequence of multicast registers (MAR0 - MAR 7) are different from that of RTL8110 series.
+4. Amendments of G-PHY accessing fuctions.
+5. Add accessing functions of E-PHY.
+6. Add accessing functions of CSI.
+7. Check null pointers in rtl8168_rx_interrupt to prevent the driver from crushing.
+8. Modify rtl8168_asic_down().
+9. Implement SIOCGMIIPHY, SIOCGMIIREG and SIOCSMIIREG.
+10.support linux kernel 2.6.23.
+
+release date: 2007/08/17
+driver version: 8.003.00
+1. Modified the loopback not to use the accept all bit in Rx Config
+2. The payload of a loopback packet is given by application.
+3. Added strip in Makefile to reduce the size of driver.
+4. Solved the compiling issue of FC2
+5. Supported linux kernel 2.6.21 and 2.6.22
+6. Supported nway force an true force.
+7. Tinkered with the phy parameters of RTL8111C 
+8. Since the different hardward structure, the csum offload registers of RTL8168B and RTL8168C/CP are different. Therefore, implement the csum function for RTL8168C/CP.
+
+release date: 2007/07/07
+driver version: 8.002.00
+1. Update the default IC version.
+2. Implement the private ioctl for Realtek
+3. Support RTL8168CP/8111CP
+4. Revise the readme to notice the users to check the built-in driver and
+remove it if found.
+5. turn on the phy when the driver is loaded.
+
+release date: 2007/04/13
+driver version: 8.001.00
+1. This driver is modified from the r8169.c in Linux kernel 2.6.18 and
+supports Linux 2.6.x only.
+2. Support RTL8168C/8111C, the Realtek PCI-E Gigabit Ethernet NIC.
+3. Support RTL8168B/8111B, the Realtek PCI-E Gigabit Ethernet NIC.
