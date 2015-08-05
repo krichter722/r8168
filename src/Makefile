@@ -26,6 +26,7 @@ KDIR		:= /lib/modules/$(KVER)/build
 KMISC		:= /lib/modules/$(KVER)/kernel/drivers/net/
 KEXT		:= $(shell echo $(KVER) | sed -ne 's/^2\.[567]\..*/k/p')o
 KFLAG		:= 2$(shell echo $(KVER) | sed -ne 's/^2\.[4]\..*/4/p')x
+PWD   := $(shell pwd)
 
 ifeq ($(RTL_IOCTL),y)
 EXTRA_CFLAGS	+= -DRTL_IOCTL_SUPPORT
@@ -35,7 +36,7 @@ modules:
 ifeq ($(KFLAG),24x)
 	$(MAKE) -f Makefile_linux24x
 else
-	$(MAKE) -C $(KDIR) SUBDIRS=$(PWD)/src modules
+	$(MAKE) -C $(KDIR) SUBDIRS=$(PWD) modules
 	strip --strip-debug r8168.$(KEXT)
 endif
 
